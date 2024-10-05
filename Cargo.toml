@@ -1,0 +1,13 @@
+[package]
+name = "lua-rust-mmdb"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+maxminddb = { version = "0.24", features = ["mmap"] }
+mlua = { version = "0.9", features = ["luajit", "module", "macros"] }
+lazy_static = "1"
+
+[lib]
+name = "mmdb"
+crate-type = ["cdylib"]

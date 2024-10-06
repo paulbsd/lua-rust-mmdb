@@ -7,7 +7,9 @@
 
 ### Examples
 
-see [examples](examples)
+see examples:
+* with [haproxy](examples/haproxy)
+* with [dnsdist](examples/dnsdist)
 
 ## License
 

@@ -1,0 +1,15 @@
+---
+on: [push]
+
+name: CI
+
+jobs:
+  build_and_test:
+    name: Compile lua5x feature
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: cargo build -r -p lua5x_rust_mmdb

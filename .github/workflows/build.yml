@@ -5,7 +5,7 @@ name: CI
 
 jobs:
   build_and_test:
-    name: Compile lua5x feature
+    name: Build and test all feature
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,3 +13,4 @@ jobs:
         with:
           toolchain: stable
       - run: cargo build -r -p lua5x_rust_mmdb
+      - run: cargo build -r -p luajit_rust_mmdb

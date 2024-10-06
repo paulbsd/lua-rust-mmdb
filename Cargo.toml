@@ -1,13 +1,15 @@
 [package]
-name = "lua-rust-mmdb"
+name = "lua_rust_mmdb"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = [
+    "lua5x_rust_mmdb",
+    "luajit_rust_mmdb",
+]
+
 [dependencies]
 maxminddb = { version = "0.24", features = ["mmap"] }
-mlua = { version = "0.9", features = ["luajit", "module", "macros"] }
-lazy_static = "1"
-
-[lib]
-name = "mmdb"
-crate-type = ["cdylib"]
+mlua = { version = "0.9", features = ["module", "macros"], default-features=false }
+lazy_static = { version = "1" }

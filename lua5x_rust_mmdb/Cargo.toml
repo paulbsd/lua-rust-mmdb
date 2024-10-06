@@ -1,0 +1,13 @@
+[package]
+name = "lua5x_rust_mmdb"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+maxminddb = { version = "0.24", features = ["mmap"] }
+mlua = { version = "0.9", features = ["lua54", "module", "macros"], default-features=false }
+lua_rust_mmdb = { path = "../" }
+
+[lib]
+name = "mmdblua5x"
+crate-type = ["cdylib"]

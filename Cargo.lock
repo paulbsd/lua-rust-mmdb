@@ -85,10 +85,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 
 [[package]]
-name = "lua-rust-mmdb"
+name = "lua5x_rust_mmdb"
+version = "0.1.0"
+dependencies = [
+ "lua_rust_mmdb",
+ "maxminddb",
+ "mlua",
+]
+
+[[package]]
+name = "lua_rust_mmdb"
 version = "0.1.0"
 dependencies = [
  "lazy_static",
+ "maxminddb",
+ "mlua",
+]
+
+[[package]]
+name = "luajit_rust_mmdb"
+version = "0.1.0"
+dependencies = [
+ "lazy_static",
+ "lua_rust_mmdb",
  "maxminddb",
  "mlua",
 ]

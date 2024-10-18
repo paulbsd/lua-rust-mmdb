@@ -15,6 +15,7 @@ see examples:
 
 * for lua5x: `cargo b -r -p lua5x_rust_mmdb`
 * for luajit: `cargo b -r -p luajit_rust_mmdb`
+* for neovim (for all the fuck we may want to do with this module 😜): `cargo b -r -p luajit_rust_mmdb`
 
 ## License
 

@@ -21,44 +21,52 @@ pub fn load(_lua: &Lua, filename: String) -> LuaResult<Option<String>> {
 
 pub fn get_city(_lua: &Lua, ipstr: Option<String>) -> LuaResult<Option<String>> {
     let ipaddress: IpAddr;
-    let city: Option<String>;
+    let mut city: Option<String> = None;
     if let None = ipstr {
         return Ok(None);
     }
-    match IpAddr::from_str(ipstr.unwrap().as_str()) {
+    match IpAddr::from_str(ipstr.unwrap_or(String::new()).as_str()) {
         Ok(o) => ipaddress = o,
         Err(_) => return Ok(None),
     };
     let dbarc = Arc::clone(&database);
     let db = dbarc.lock().unwrap();
-    let c: City = db.as_ref().unwrap().lookup(ipaddress).unwrap();
-    city = match c.city {
-        Some(o) => match o.names.unwrap().get(&"en") {
-            Some(oo) => Some(oo.to_string()),
-            None => None,
-        },
-        None => None,
+    match db.as_ref().unwrap().lookup::<City>(ipaddress) {
+        Ok(c) => {
+            city = match c.city {
+                Some(o) => match o.names.unwrap().get(&"en") {
+                    Some(oo) => Some(oo.to_string()),
+                    None => None,
+                },
+                None => None,
+            }
+        }
+        Err(_) => {}
     };
     Ok(city)
 }
 
 pub fn get_country(_lua: &Lua, ipstr: Option<String>) -> LuaResult<Option<String>> {
     let ipaddress: IpAddr;
-    let countrycode: Option<String>;
+    let mut countrycode: Option<String> = None;
     if let None = ipstr {
         return Ok(None);
     }
 
-    match IpAddr::from_str(ipstr.unwrap().as_str()) {
+    match IpAddr::from_str(ipstr.unwrap_or(String::new()).as_str()) {
         Ok(o) => ipaddress = o,
         Err(_) => return Ok(None),
     };
     let dbarc = Arc::clone(&database);
     let db = dbarc.lock().unwrap();
-    let c: Country = db.as_ref().unwrap().lookup(ipaddress).unwrap();
-    countrycode = match c.country {
-        Some(o) => Some(o.iso_code.unwrap().to_string()),
-        None => None,
+    match db.as_ref().unwrap().lookup::<Country>(ipaddress) {
+        Ok(c) => {
+            countrycode = match c.country {
+                Some(o) => Some(o.iso_code.unwrap().to_string()),
+                None => None,
+            }
+        }
+        Err(_) => {}
     };
 
     Ok(countrycode)

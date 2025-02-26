@@ -1,19 +1,15 @@
 use std::net::IpAddr;
 use std::str::FromStr;
-use std::sync::Arc;
-use std::sync::RwLock;
+use std::sync::{Arc, LazyLock, RwLock};
 
-use lazy_static::lazy_static;
-use maxminddb::geoip2::*;
-use maxminddb::*;
+use maxminddb::{geoip2::*, Mmap, Reader};
 use mlua::prelude::*;
 
-lazy_static! {
-    static ref database: Arc<RwLock<Option<Reader<Mmap>>>> = Arc::new(RwLock::new(None));
-}
+static DATABASE: LazyLock<Arc<RwLock<Option<Reader<Mmap>>>>> =
+    LazyLock::new(|| Arc::new(RwLock::new(None)));
 
 pub fn load(_lua: &Lua, filename: String) -> LuaResult<Option<String>> {
-    let dbarc = Arc::clone(&database);
+    let dbarc = Arc::clone(&DATABASE);
     let mut db = dbarc.write().unwrap();
     *db = Some(Reader::open_mmap(filename).unwrap());
     Ok(None)
@@ -26,7 +22,7 @@ pub fn get_postal(_lua: &Lua, ipstr: Option<String>) -> LuaResult<Option<String>
     };
     let mut postal: Option<String> = None;
 
-    let dbarc = Arc::clone(&database);
+    let dbarc = Arc::clone(&DATABASE);
     let db = dbarc.read().unwrap();
     match db.as_ref().unwrap().lookup::<City>(ipaddress) {
         Ok(citylookup) => {
@@ -50,7 +46,7 @@ pub fn get_continent(_lua: &Lua, ipstr: Option<String>) -> LuaResult<Option<Stri
     };
     let mut continent: Option<String> = None;
 
-    let dbarc = Arc::clone(&database);
+    let dbarc = Arc::clone(&DATABASE);
     let db = dbarc.read().unwrap();
     match db.as_ref().unwrap().lookup::<City>(ipaddress) {
         Ok(citylookup) => {
@@ -74,7 +70,7 @@ pub fn get_city(_lua: &Lua, ipstr: Option<String>) -> LuaResult<Option<String>> 
     };
     let mut city: Option<String> = None;
 
-    let dbarc = Arc::clone(&database);
+    let dbarc = Arc::clone(&DATABASE);
     let db = dbarc.read().unwrap();
     match db.as_ref().unwrap().lookup::<City>(ipaddress) {
         Ok(citylookup) => {
@@ -98,7 +94,7 @@ pub fn get_subdivisions(_lua: &Lua, ipstr: Option<String>) -> LuaResult<Option<V
     };
     let mut subdivisions: Option<Vec<String>> = None;
 
-    let dbarc = Arc::clone(&database);
+    let dbarc = Arc::clone(&DATABASE);
     let db = dbarc.read().unwrap();
     match db.as_ref().unwrap().lookup::<City>(ipaddress) {
         Ok(citylookup) => {
@@ -126,7 +122,7 @@ pub fn get_country(_lua: &Lua, ipstr: Option<String>) -> LuaResult<Option<String
     };
     let mut countrycode: Option<String> = None;
 
-    let dbarc = Arc::clone(&database);
+    let dbarc = Arc::clone(&DATABASE);
     let db = dbarc.read().unwrap();
     match db.as_ref().unwrap().lookup::<Country>(ipaddress) {
         Ok(citylookup) => {

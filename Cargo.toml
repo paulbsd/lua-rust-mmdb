@@ -13,4 +13,3 @@ default-members = ["lua5x_rust_mmdb"]
 [dependencies]
 maxminddb = { version = "0.24", features = ["mmap"] }
 mlua = { version = "0.9", features = ["module", "macros"], default-features = false }
-lazy_static = { version = "1" }
